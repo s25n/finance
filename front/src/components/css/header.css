@@ -1,0 +1,51 @@
+header {
+  position: fixed;
+  top: 10px;
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+  height: 10vh;
+  -webkit-box-align: center;
+  align-items: center;
+  flex-direction: row;
+  flex: 0 0 auto;
+  -webkit-box-pack: justify;
+  justify-content: space-between;
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: xx-large;
+  font-family: "LexendDeca";
+  color: #1c1c1c;
+}
+
+.button-wallet-connect {
+  height: 5vh;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 25px;
+  transition: transform 0.2s ease 0s, box-shadow 0.2s ease 0s;
+  background: rgb(248, 248, 248);
+  border: 1px solid rgb(248, 248, 248);
+  box-shadow: rgb(233 233 233) 0px 0px 0px, rgb(255 255 255) 0px 0px 0px;
+}
+
+.button-wallet-connect:hover {
+  border: 1px solid rgb(248, 248, 248);
+  transform: scale(1.02);
+  box-shadow: rgb(233 233 233) 6px 6px 11px, rgb(255 255 255) -6px -6px 11px;
+}
+
+.button-wallet-connect-box {
+  font-family: "NotoSans-Regular";
+  font-size: large;
+  display: inline-block;
+  box-sizing: border-box;
+  cursor: pointer;
+  font: inherit;
+  text-decoration: none;
+  margin: 0px;
+}

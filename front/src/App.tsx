@@ -1,24 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import "./App.css";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
+import Borrow from "./components/Borrow";
+import Pool from "./components/Pool";
+import Lend from "./components/Lend";
+import Header from "./components/Header";
+import { ModeType } from "./enum/modeType";
+import SelectMode from "./components/SelectMode";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Router>
+        <Header />
+        <SelectMode />
+        <div>
+          <Routes>
+            <Route path="/borrow" element={<Borrow />} />
+            <Route path="/lend" element={<Lend />} />
+            <Route path="/pool" element={<Pool />} />
+          </Routes>
+        </div>
+      </Router>
     </div>
   );
 }

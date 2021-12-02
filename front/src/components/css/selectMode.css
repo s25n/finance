@@ -1,0 +1,21 @@
+.select-box {
+  position: fixed;
+  top: 20vh;
+  display: flex;
+  box-sizing: border-box;
+  width: 35%;
+  -webkit-box-align: center;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.button-mode {
+  cursor: pointer;
+  display: flex;
+  font-size: 22px;
+  line-height: 27px;
+  font-weight: bold;
+  background-color: transparent;
+  font-family: "LexendDeca";
+  border: 0;
+}
