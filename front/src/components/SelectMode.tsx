@@ -35,7 +35,7 @@ const ModeButton = (buttonProps: ButtonProps) => {
 
   return (
     <button
-      className="button-mode"
+      className={`button-mode ${!buttonProps.isCurrentMode && "button-other"}`}
       onClick={() => {
         navigate(`/${buttonProps.name}`);
       }}

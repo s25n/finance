@@ -1,16 +1,17 @@
 .select-box {
+  z-index: 10;
   position: fixed;
   top: 20vh;
   display: flex;
   box-sizing: border-box;
-  width: 35%;
+  width: 30%;
   -webkit-box-align: center;
   align-items: center;
   justify-content: space-between;
+  animation: 1s ease 0s 1 normal forwards running intro;
 }
 
 .button-mode {
-  cursor: pointer;
   display: flex;
   font-size: 22px;
   line-height: 27px;
@@ -18,4 +19,13 @@
   background-color: transparent;
   font-family: "LexendDeca";
   border: 0;
+}
+
+.button-other {
+  cursor: pointer;
+}
+
+.button-other:hover {
+  transform: scale(1.2);
+  transition: transform 0.3s ease-in-out 0s;
 }
