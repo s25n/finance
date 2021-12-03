@@ -12,12 +12,8 @@ import Lend from "./components/Lend";
 import Header from "./components/Header";
 import { ModeType } from "./enum/modeType";
 import SelectMode from "./components/SelectMode";
-import { Web3Context } from "./providers/Web3Provider";
-import { VscGear } from "react-icons/vsc";
 
 function App() {
-  const { connected, address, reset, connect } = useContext(Web3Context);
-
   return (
     <div className="App">
       <Router>
