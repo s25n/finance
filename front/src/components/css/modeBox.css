@@ -1,0 +1,197 @@
+.mode-container {
+  display: block;
+  border-radius: 8px;
+  background: rgb(248, 248, 248);
+  box-shadow: rgb(238 238 238) 8px 8px 11px 2px,
+    rgb(255 255 255) -8px -8px 11px 2px;
+  transition: max-height 500ms ease 0s, opacity 500ms ease 0s;
+  opacity: 1;
+  overflow: visible;
+  max-height: unset;
+  position: relative;
+  top: 30vh;
+  max-width: 620px;
+  width: 100%;
+}
+
+.mode-color-box {
+  display: flex;
+  box-sizing: border-box;
+  align-self: center;
+  margin-bottom: -18px;
+  background: linear-gradient(
+    to right bottom,
+    rgb(123, 166, 180),
+    rgb(173, 216, 230),
+    rgb(173, 216, 230),
+    rgb(199, 214, 255),
+    rgb(199, 214, 255),
+    rgb(199, 214, 255),
+    rgb(174, 189, 244),
+    rgb(149, 164, 219),
+    rgb(149, 164, 219)
+  );
+  min-width: 0px;
+  min-height: 0px;
+  flex-direction: column;
+  max-width: 620px;
+  width: 100%;
+  height: 100%;
+  padding-bottom: 40px;
+  border-radius: 10px;
+}
+
+.mode-color-box-contents {
+  display: flex;
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0px;
+  min-height: 0px;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.mode-color-box-series {
+  display: flex;
+  box-sizing: border-box;
+  max-width: 100%;
+  -webkit-box-align: center;
+  align-items: center;
+  min-width: 0px;
+  min-height: 0px;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.mode-series {
+  display: flex;
+  height: 50px;
+  max-width: 100%;
+  -webkit-box-align: center;
+  align-items: center;
+  min-width: 0px;
+  min-height: 0px;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.series-apy {
+  box-sizing: border-box;
+  -webkit-box-align: center;
+  align-items: center;
+  background-color: rgb(149, 164, 219);
+  color: rgb(34, 34, 34);
+  min-width: 0px;
+  flex-direction: row;
+  min-height: 1em;
+  -webkit-box-pack: center;
+  justify-content: center;
+  padding: 15px 15px;
+  border-radius: 40px;
+  transform: scale(0.5);
+  animation: 1s ease 0s 1 normal forwards running fsISJu;
+}
+
+.mode-detail-box {
+  display: flex;
+  box-sizing: border-box;
+  align-self: center;
+  background-color: rgb(248, 248, 248);
+  color: rgb(34, 34, 34);
+  min-width: 0px;
+  min-height: 0px;
+  flex-direction: column;
+  max-width: 600px;
+  width: 100%;
+  height: 100%;
+  padding: 40px;
+  border-radius: 10px;
+}
+
+button.button-series {
+  cursor: pointer;
+  margin-right: 20px;
+  width: 130px;
+  height: 30px;
+  border: 0;
+  border-radius: 25px;
+  background: rgb(199, 214, 255);
+  box-shadow: rgb(179 194 235) 6px 6px 11px, rgb(209 224 255) -6px -6px 11px;
+}
+
+button.button-series:hover {
+  transform: scale(1.02);
+  transition: transform 0.3s ease 0s, box-shadow 0.3s ease-out 0s;
+  box-shadow: rgb(179 194 235) 8px 8px 11px, rgb(209 224 255) -8px -8px 11px;
+}
+
+.button-series-content {
+  position: relative;
+  top: 0;
+  height: 30px;
+  font-family: "NotoSans-Light";
+  background-color: transparent;
+  display: flex;
+  box-sizing: border-box;
+  max-width: 100%;
+  -webkit-box-align: center;
+  align-items: center;
+  min-width: 0px;
+  min-height: 0px;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 5px;
+}
+
+.borrow-input-box {
+  display: flex;
+  height: 30px;
+  justify-content: space-between;
+  margin-top: 20px;
+  border-radius: 8px;
+  padding: 10px;
+  background: rgb(248, 248, 248);
+  box-shadow: rgb(228 228 228) 6px 6px 11px inset,
+    rgb(255 255 255) -6px -6px 11px inset;
+}
+
+button.button-select-asset {
+  cursor: pointer;
+  width: 25%;
+  border: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  font-family: "LexendDeca";
+  border-radius: 25px;
+  background: rgb(248, 248, 248);
+  box-shadow: rgb(228 228 228) 6px 6px 11px, rgb(255 255 255) -6px -6px 11px;
+}
+
+.input-borrow-amount {
+  background-color: transparent;
+  width: 75%;
+  border: 0;
+  margin-inline-start: 10px;
+  font-family: "LexendDeca";
+}
+
+.input-borrow-amount:focus {
+  outline: none;
+}
+
+button.button-submit {
+  cursor: pointer;
+  font-family: "LexendDeca";
+  font-size: large;
+  margin-top: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 25px;
+  background: rgb(248, 248, 248);
+  box-shadow: rgb(233 233 233) 6px 6px 11px, rgb(255 255 255) -6px -6px 11px;
+  transition: transform 0.3s ease 0s, box-shadow 0.3s ease-out 0s;
+}
