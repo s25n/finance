@@ -183,6 +183,30 @@ button.button-select-asset {
   outline: none;
 }
 
+.lend-input-box {
+  display: flex;
+  height: 30px;
+  justify-content: space-between;
+  margin-top: 20px;
+  border-radius: 8px;
+  padding: 10px;
+  background: rgb(248, 248, 248);
+  box-shadow: rgb(228 228 228) 6px 6px 11px inset,
+    rgb(255 255 255) -6px -6px 11px inset;
+}
+
+.input-lend-amount {
+  background-color: transparent;
+  width: 95%;
+  border: 0;
+  margin-inline-start: 10px;
+  font-family: "LexendDeca";
+}
+
+.input-lend-amount:focus {
+  outline: none;
+}
+
 button.button-submit {
   cursor: pointer;
   font-family: "LexendDeca";
@@ -194,4 +218,11 @@ button.button-submit {
   background: rgb(248, 248, 248);
   box-shadow: rgb(233 233 233) 6px 6px 11px, rgb(255 255 255) -6px -6px 11px;
   transition: transform 0.3s ease 0s, box-shadow 0.3s ease-out 0s;
+}
+
+.pool-liquidity-box {
+  padding-left: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
