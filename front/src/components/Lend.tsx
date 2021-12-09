@@ -1,10 +1,16 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Web3Context } from "../providers/Web3Provider";
 import layerIcon from "../assets/images/layers.png";
 import daiIcon from "../assets/images/dai.png";
 import "./css/modeBox.css";
+import StyledTextBox from "./StyledTextBox";
 
 interface Props {}
+
+interface State {
+  portfolio: string;
+  current: string;
+}
 
 const Lend = (props: Props) => {
   const { connected, address, reset, connect } = useContext(Web3Context);
@@ -14,6 +20,9 @@ const Lend = (props: Props) => {
     } else {
     }
   };
+  const initialState = { portfolio: "0.00", current: "0.00" };
+
+  const [state, setState] = useState(initialState);
 
   return (
     <div className="mode-container">
@@ -58,6 +67,20 @@ const Lend = (props: Props) => {
               </div>
             </button>
           </div>
+          {connected && (
+            <div className="value-box-container">
+              <StyledTextBox
+                title={"Portfolio Value"}
+                subtitle={"at maturity"}
+                value={`${state.portfolio} DAI`}
+              />
+              <StyledTextBox
+                title={"Current Value"}
+                subtitle={"if closing your position now"}
+                value={`${state.current} DAI`}
+              />
+            </div>
+          )}
         </div>
       </div>
       <div className="mode-detail-box">
