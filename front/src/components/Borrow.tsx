@@ -5,11 +5,11 @@ import daiIcon from "../assets/images/dai.png";
 import ethIcon from "../assets/images/eth.png";
 
 import "./css/modeBox.css";
-import { Ladle__factory } from "../typechain-types";
+import { Ladle__factory, Pool__factory } from "../typechain-types";
 import contracts from "../envs/contracts";
-import { utils } from "ethers";
+import { constants, utils } from "ethers";
 import series from "../envs/series";
-import { DAI, ETH, MAX128 } from "../envs/constants";
+import { DAI } from "../envs/constants";
 
 interface Props {}
 
@@ -25,22 +25,29 @@ const Borrow = (props: Props) => {
       if (!provider) return;
 
       const ILadle = new utils.Interface(Ladle__factory.abi)
+      const IPool = new utils.Interface(Pool__factory.abi);
+
       Ladle__factory
         .connect(contracts.Ladle, provider.getSigner(address))
         .batch([
           ILadle.encodeFunctionData('build', [series[0], DAI, 0]),
-          ILadle.encodeFunctionData('joinEther', [ETH]),
           ILadle.encodeFunctionData(
-            'serve',
+            'pour',
             [
               '0x' + '00'.repeat(12),
               address,
               utils.parseEther(ethAmount),
-              utils.parseEther(daiAmount),
-              MAX128
+              utils.parseEther(daiAmount)
             ]
-          )
-        ], { value: utils.parseEther(ethAmount) })
+          ),
+          ILadle.encodeFunctionData('route', [
+            contracts.Pool,
+            IPool.encodeFunctionData('sellFYToken', [
+              address,
+              constants.Zero
+            ])
+          ])
+        ])
     }
   };
 
