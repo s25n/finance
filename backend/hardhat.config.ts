@@ -30,6 +30,14 @@ const config: HardhatUserConfig = {
     ganache: {
       url: "http://0.0.0.0:8545",
     },
+    testnet: {
+      url: "https://data-seed-prebsc-1-s1.binance.org:8545",
+      chainId: 97,
+      accounts: [process.env.ADMIN || ""],
+    },
+  },
+  etherscan: {
+    apiKey: process.env.ETHERSCAN_API_KEY,
   },
 };
 

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: MIT
 pragma solidity 0.8.6;
 
 import "erc3156/contracts/interfaces/IERC3156FlashBorrower.sol";
@@ -11,15 +11,15 @@ import "@yield-protocol/utils-v2/contracts/token/TransferHelper.sol";
 import "@yield-protocol/utils-v2/contracts/math/WMul.sol";
 import "@yield-protocol/utils-v2/contracts/cast/CastU256U128.sol";
 
-
-contract Join is IJoin, IERC3156FlashLender, AccessControl() {
+contract Join is IJoin, IERC3156FlashLender, AccessControl {
     using TransferHelper for IERC20;
     using WMul for uint256;
     using CastU256U128 for uint256;
 
     event FlashFeeFactorSet(uint256 indexed fee);
 
-    bytes32 constant internal FLASH_LOAN_RETURN = keccak256("ERC3156FlashBorrower.onFlashLoan");
+    bytes32 internal constant FLASH_LOAN_RETURN =
+        keccak256("ERC3156FlashBorrower.onFlashLoan");
     uint256 constant FLASH_LOANS_DISABLED = type(uint256).max;
 
     address public immutable override asset;
@@ -31,17 +31,15 @@ contract Join is IJoin, IERC3156FlashLender, AccessControl() {
     }
 
     /// @dev Set the flash loan fee factor
-    function setFlashFeeFactor(uint256 flashFeeFactor_)
-        external
-        auth
-    {
+    function setFlashFeeFactor(uint256 flashFeeFactor_) external auth {
         flashFeeFactor = flashFeeFactor_;
         emit FlashFeeFactorSet(flashFeeFactor_);
     }
 
     /// @dev Take `amount` `asset` from `user` using `transferFrom`, minus any unaccounted `asset` in this contract.
     function join(address user, uint128 amount)
-        external override
+        external
+        override
         auth
         returns (uint128)
     {
@@ -49,21 +47,22 @@ contract Join is IJoin, IERC3156FlashLender, AccessControl() {
     }
 
     /// @dev Take `amount` `asset` from `user` using `transferFrom`, minus any unaccounted `asset` in this contract.
-    function _join(address user, uint128 amount)
-        internal
-        returns (uint128)
-    {
+    function _join(address user, uint128 amount) internal returns (uint128) {
         IERC20 token = IERC20(asset);
         uint256 _storedBalance = storedBalance;
         uint256 available = token.balanceOf(address(this)) - _storedBalance; // Fine to panic if this underflows
         storedBalance = _storedBalance + amount;
-        unchecked { if (available < amount) token.safeTransferFrom(user, address(this), amount - available); }
-        return amount;        
+        unchecked {
+            if (available < amount)
+                token.safeTransferFrom(user, address(this), amount - available);
+        }
+        return amount;
     }
 
     /// @dev Transfer `amount` `asset` to `user`
     function exit(address user, uint128 amount)
-        external override
+        external
+        override
         auth
         returns (uint128)
     {
@@ -71,10 +70,7 @@ contract Join is IJoin, IERC3156FlashLender, AccessControl() {
     }
 
     /// @dev Transfer `amount` `asset` to `user`
-    function _exit(address user, uint128 amount)
-        internal
-        returns (uint128)
-    {
+    function _exit(address user, uint128 amount) internal returns (uint128) {
         IERC20 token = IERC20(asset);
         storedBalance -= amount;
         token.safeTransfer(user, amount);
@@ -82,10 +78,7 @@ contract Join is IJoin, IERC3156FlashLender, AccessControl() {
     }
 
     /// @dev Retrieve any tokens other than the `asset`. Useful for airdropped tokens.
-    function retrieve(IERC20 token, address to)
-        external
-        auth
-    {
+    function retrieve(IERC20 token, address to) external auth {
         require(address(token) != address(asset), "Use exit for asset");
         token.safeTransfer(to, token.balanceOf(address(this)));
     }
@@ -96,7 +89,9 @@ contract Join is IJoin, IERC3156FlashLender, AccessControl() {
      * @return The amount of `token` that can be borrowed.
      */
     function maxFlashLoan(address token)
-        external view override
+        external
+        view
+        override
         returns (uint256)
     {
         return token == asset ? storedBalance : 0;
@@ -109,7 +104,9 @@ contract Join is IJoin, IERC3156FlashLender, AccessControl() {
      * @return The amount of `token` to be charged for the loan, on top of the returned principal.
      */
     function flashFee(address token, uint256 amount)
-        external view override
+        external
+        view
+        override
         returns (uint256)
     {
         require(token == asset, "Unsupported currency");
@@ -133,16 +130,22 @@ contract Join is IJoin, IERC3156FlashLender, AccessControl() {
      * @param amount The amount of tokens lent.
      * @param data A data parameter to be passed on to the `receiver` for any custom use.
      */
-    function flashLoan(IERC3156FlashBorrower receiver, address token, uint256 amount, bytes memory data)
-        external override
-        returns(bool)
-    {
+    function flashLoan(
+        IERC3156FlashBorrower receiver,
+        address token,
+        uint256 amount,
+        bytes memory data
+    ) external override returns (bool) {
         require(token == asset, "Unsupported currency");
         uint128 _amount = amount.u128();
         uint128 _fee = _flashFee(amount).u128();
         _exit(address(receiver), _amount);
 
-        require(receiver.onFlashLoan(msg.sender, token, _amount, _fee, data) == FLASH_LOAN_RETURN, "Non-compliant borrower");
+        require(
+            receiver.onFlashLoan(msg.sender, token, _amount, _fee, data) ==
+                FLASH_LOAN_RETURN,
+            "Non-compliant borrower"
+        );
 
         _join(address(receiver), _amount + _fee);
         return true;

@@ -1,8 +1,7 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: MIT
 pragma solidity 0.8.6;
 import "@yield-protocol/utils-v2/contracts/utils/RevertMsgExtractor.sol";
 import "@yield-protocol/utils-v2/contracts/utils/IsContract.sol";
-
 
 /// @dev Router forwards calls between two contracts, so that any permissions
 /// given to the original caller are stripped from the call.
@@ -11,15 +10,16 @@ import "@yield-protocol/utils-v2/contracts/utils/IsContract.sol";
 contract Router {
     using IsContract for address;
 
-    address immutable public owner;
+    address public immutable owner;
 
-    constructor () {
+    constructor() {
         owner = msg.sender;
     }
 
     /// @dev Allow users to route calls to a pool, to be used with batch
     function route(address target, bytes calldata data)
-        external payable
+        external
+        payable
         returns (bytes memory result)
     {
         require(msg.sender == owner, "Only owner");

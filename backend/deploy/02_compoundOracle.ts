@@ -24,13 +24,17 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   });
 
   // dai price
-  await cToken.setExchangeRate(
-    hre.ethers.utils.parseEther("2").mul(10000000000)
-  );
+  await (
+    await cToken.setExchangeRate(
+      hre.ethers.utils.parseEther("2").mul(10000000000)
+    )
+  ).wait();
   // eth price
-  await cToken.setBorrowIndex(
-    hre.ethers.utils.parseEther("1").mul(10000000000)
-  );
+  await (
+    await cToken.setBorrowIndex(
+      hre.ethers.utils.parseEther("1").mul(10000000000)
+    )
+  ).wait();
 };
 deploy.tags = ["test", "oracle"];
 deploy.dependencies = ["dependencies"];

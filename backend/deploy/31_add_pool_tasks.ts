@@ -19,13 +19,17 @@ async function initPool(
   base: ERC20Test,
   fyToken: FYToken
 ) {
-  await base.faucet();
-  await fyToken.grantRole(
-    id(fyToken.interface, "mint(address,uint256)"),
-    owner
-  ); // Only test environment
-  await fyToken.mint(pool.address, ethers.utils.parseEther("1").mul(1100000));
-  await pool.sync();
+  await (await base.faucet()).wait();
+  await (
+    await fyToken.grantRole(
+      id(fyToken.interface, "mint(address,uint256)"),
+      owner
+    )
+  ).wait(); // Only test environment
+  await (
+    await fyToken.mint(pool.address, ethers.utils.parseEther("1").mul(1100000))
+  ).wait();
+  await (await pool.sync()).wait();
 
   return pool;
 }
@@ -44,7 +48,9 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const seriesId = ethers.utils.hexlify(ethers.utils.randomBytes(6));
 
-  await wand.addSeries(seriesId, ETH, maturity, [DAI], seriesId, seriesId);
+  await (
+    await wand.addSeries(seriesId, ETH, maturity, [DAI], seriesId, seriesId)
+  ).wait();
 
   const pool = (await hre.ethers.getContractAt(
     "Pool",
@@ -60,14 +66,16 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   await initPool(deployer, pool, weth, fyToken);
 
-  await fyToken.grantRoles(
-    [
-      id(fyToken.interface, "mint(address,uint256)"),
-      id(fyToken.interface, "burn(address,uint256)"),
-      id(fyToken.interface, "point(bytes32,address)"),
-    ],
-    deployer
-  ); // Only test environment
+  await (
+    await fyToken.grantRoles(
+      [
+        id(fyToken.interface, "mint(address,uint256)"),
+        id(fyToken.interface, "burn(address,uint256)"),
+        id(fyToken.interface, "point(bytes32,address)"),
+      ],
+      deployer
+    )
+  ).wait(); // Only test environment
 };
 
 deploy.tags = ["test", "init"];

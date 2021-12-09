@@ -36,13 +36,15 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     "DaiChainlinkAggregatorV3Mock"
   )) as ChainlinkAggregatorV3Mock;
 
-  await chainlinkMultiOracle.setSource(
-    ETH,
-    weth.address,
-    DAI,
-    dai.address,
-    daiOracle.address
-  );
+  await (
+    await chainlinkMultiOracle.setSource(
+      ETH,
+      weth.address,
+      DAI,
+      dai.address,
+      daiOracle.address
+    )
+  ).wait();
 
   const compoundMultiOracle = (await getContract(
     hre,
@@ -51,30 +53,34 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const cToken = (await getContract(hre, "CTokenMock")) as CTokenMock;
 
-  await compoundMultiOracle.setSource(ETH, RATE, cToken.address);
-  await compoundMultiOracle.setSource(ETH, CHI, cToken.address);
+  await (await compoundMultiOracle.setSource(ETH, RATE, cToken.address)).wait();
+  await (await compoundMultiOracle.setSource(ETH, CHI, cToken.address)).wait();
 
-  await wand.makeBase(ETH, compoundMultiOracle.address);
+  await (await wand.makeBase(ETH, compoundMultiOracle.address)).wait();
 
   const ratio = 1000000; //  1000000 == 100% collateralization ratio
 
-  await witch.setIlk(
-    DAI,
-    4 * 60 * 60,
-    hre.ethers.utils.parseEther("1").div(2),
-    1000000,
-    0,
-    18
-  );
-  await wand.makeIlk(
-    ETH,
-    DAI,
-    chainlinkMultiOracle.address,
-    ratio,
-    1000000,
-    1,
-    18
-  );
+  await (
+    await witch.setIlk(
+      DAI,
+      4 * 60 * 60,
+      hre.ethers.utils.parseEther("1").div(2),
+      1000000,
+      0,
+      18
+    )
+  ).wait();
+  await (
+    await wand.makeIlk(
+      ETH,
+      DAI,
+      chainlinkMultiOracle.address,
+      ratio,
+      1000000,
+      1,
+      18
+    )
+  ).wait();
 };
 
 deploy.tags = ["test", "init"];

@@ -36,9 +36,9 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   )) as ChainlinkAggregatorV3Mock;
 
   // dai price
-  await daiOracle.setPrice(hre.ethers.utils.parseEther("1"));
+  await (await daiOracle.setPrice(hre.ethers.utils.parseEther("1"))).wait();
   // eth price
-  await wethOracle.setPrice(hre.ethers.utils.parseEther("4000"));
+  await (await wethOracle.setPrice(hre.ethers.utils.parseEther("4000"))).wait();
 };
 deploy.tags = ["test", "oracle"];
 deploy.dependencies = ["dependencies"];

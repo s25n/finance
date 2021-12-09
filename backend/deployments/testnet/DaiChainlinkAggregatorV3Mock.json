@@ -1,0 +1,166 @@
+{
+  "address": "0xCB5eA82a717D36Ca7CdB5c4aA01899E5e97AB7F0",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "decimals",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "latestRoundData",
+      "outputs": [
+        {
+          "internalType": "uint80",
+          "name": "",
+          "type": "uint80"
+        },
+        {
+          "internalType": "int256",
+          "name": "",
+          "type": "int256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint80",
+          "name": "",
+          "type": "uint80"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "price",
+      "outputs": [
+        {
+          "internalType": "int256",
+          "name": "",
+          "type": "int256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "price_",
+          "type": "uint256"
+        }
+      ],
+      "name": "setPrice",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "timestamp",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0xd7c8a0f9be14f81bec74144240c3fe7a7bd7a62ba2209113852fd70d44d76956",
+  "receipt": {
+    "to": null,
+    "from": "0x0B16E3ea120Aeb1DeEbE2Fd8476c6aee8d4F3964",
+    "contractAddress": "0xCB5eA82a717D36Ca7CdB5c4aA01899E5e97AB7F0",
+    "transactionIndex": 1,
+    "gasUsed": "138399",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0xfa51b737afc9ae564bb13e65c1f2b30ebe5448fe919d6e5428c7ab16485c5df4",
+    "transactionHash": "0xd7c8a0f9be14f81bec74144240c3fe7a7bd7a62ba2209113852fd70d44d76956",
+    "logs": [],
+    "blockNumber": 14826544,
+    "cumulativeGasUsed": "159399",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "solcInputHash": "3c18ca302b05a5abaa101783401a3acf",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.6+commit.11564f7e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"decimals\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"latestRoundData\",\"outputs\":[{\"internalType\":\"uint80\",\"name\":\"\",\"type\":\"uint80\"},{\"internalType\":\"int256\",\"name\":\"\",\"type\":\"int256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint80\",\"name\":\"\",\"type\":\"uint80\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"price\",\"outputs\":[{\"internalType\":\"int256\",\"name\":\"\",\"type\":\"int256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"price_\",\"type\":\"uint256\"}],\"name\":\"setPrice\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"timestamp\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/vault/chainlink/ChainlinkAggregatorV3Mock.sol\":\"ChainlinkAggregatorV3Mock\"},\"evmVersion\":\"berlin\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":1},\"remappings\":[]},\"sources\":{\"contracts/vault/chainlink/ChainlinkAggregatorV3Mock.sol\":{\"content\":\"// SPDX-License-Identifier: BUSL-1.1\\npragma solidity 0.8.6;\\n\\ncontract ChainlinkAggregatorV3Mock {\\n    int256 public price; // Prices in Chainlink can be negative (!)\\n    uint256 public timestamp;\\n    uint8 public decimals = 18; // Decimals provided in the oracle prices\\n\\n    function setPrice(uint256 price_) external {\\n        // We provide prices with 18 decimals, which will be scaled Chainlink's decimals\\n        price = int256(price_);\\n        timestamp = block.timestamp;\\n    }\\n\\n    function latestRoundData()\\n        public\\n        view\\n        returns (\\n            uint80,\\n            int256,\\n            uint256,\\n            uint256,\\n            uint80\\n        )\\n    {\\n        return (0, price, 0, timestamp, 0);\\n    }\\n}\\n\",\"keccak256\":\"0x76b37845b82670b675943a381242352053c37e53121c8c4a6c1687c45924b3a0\",\"license\":\"BUSL-1.1\"}},\"version\":1}",
+  "bytecode": "0x60806040526002805460ff1916601217905534801561001d57600080fd5b506101288061002d6000396000f3fe6080604052348015600f57600080fd5b506004361060505760003560e01c8063313ce56714605557806391b7f5ed146078578063a035b1fe14608e578063b80777ea1460a3578063feaf968c1460ab575b600080fd5b60025460619060ff1681565b60405160ff90911681526020015b60405180910390f35b608c608336600460da565b60005542600155565b005b609660005481565b604051908152602001606f565b609660015481565b6000805460015460408051848152602081019390935282018390526060820152608081019190915260a001606f565b60006020828403121560eb57600080fd5b503591905056fea26469706673582212204b7cccae36f649a3bd2057dae439347e0f5af058f213d5e509924381be46da8564736f6c63430008060033",
+  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060505760003560e01c8063313ce56714605557806391b7f5ed146078578063a035b1fe14608e578063b80777ea1460a3578063feaf968c1460ab575b600080fd5b60025460619060ff1681565b60405160ff90911681526020015b60405180910390f35b608c608336600460da565b60005542600155565b005b609660005481565b604051908152602001606f565b609660015481565b6000805460015460408051848152602081019390935282018390526060820152608081019190915260a001606f565b60006020828403121560eb57600080fd5b503591905056fea26469706673582212204b7cccae36f649a3bd2057dae439347e0f5af058f213d5e509924381be46da8564736f6c63430008060033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 3,
+        "contract": "contracts/vault/chainlink/ChainlinkAggregatorV3Mock.sol:ChainlinkAggregatorV3Mock",
+        "label": "price",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_int256"
+      },
+      {
+        "astId": 5,
+        "contract": "contracts/vault/chainlink/ChainlinkAggregatorV3Mock.sol:ChainlinkAggregatorV3Mock",
+        "label": "timestamp",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 8,
+        "contract": "contracts/vault/chainlink/ChainlinkAggregatorV3Mock.sol:ChainlinkAggregatorV3Mock",
+        "label": "decimals",
+        "offset": 0,
+        "slot": "2",
+        "type": "t_uint8"
+      }
+    ],
+    "types": {
+      "t_int256": {
+        "encoding": "inplace",
+        "label": "int256",
+        "numberOfBytes": "32"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      },
+      "t_uint8": {
+        "encoding": "inplace",
+        "label": "uint8",
+        "numberOfBytes": "1"
+      }
+    }
+  }
+}

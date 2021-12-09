@@ -1,0 +1,136 @@
+{
+  "address": "0x8Fd001D2d9AD667505C9Cdd4Cbd317C25b8878E2",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "borrowIndex",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "exchangeRateCurrent",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "exchangeRateStored",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "chi",
+          "type": "uint256"
+        }
+      ],
+      "name": "setBorrowIndex",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "chi",
+          "type": "uint256"
+        }
+      ],
+      "name": "setExchangeRate",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x77ffbc0462a3a6dbf60648997e4a87820e6f27ae93e2560f27c94a3c01be2f79",
+  "receipt": {
+    "to": null,
+    "from": "0x0B16E3ea120Aeb1DeEbE2Fd8476c6aee8d4F3964",
+    "contractAddress": "0x8Fd001D2d9AD667505C9Cdd4Cbd317C25b8878E2",
+    "transactionIndex": 7,
+    "gasUsed": "119251",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0xf405da4e47fdfb1cfa98ff2677e3ae87242430b3281be12321b3a42e62e6137d",
+    "transactionHash": "0x77ffbc0462a3a6dbf60648997e4a87820e6f27ae93e2560f27c94a3c01be2f79",
+    "logs": [],
+    "blockNumber": 14826558,
+    "cumulativeGasUsed": "1077711",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "solcInputHash": "63c1cefd97260d984ec543e6f4bbc308",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.6+commit.11564f7e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"borrowIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"exchangeRateCurrent\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"exchangeRateStored\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"chi\",\"type\":\"uint256\"}],\"name\":\"setBorrowIndex\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"chi\",\"type\":\"uint256\"}],\"name\":\"setExchangeRate\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/vault/compound/CTokenMock.sol\":\"CTokenMock\"},\"evmVersion\":\"berlin\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":1},\"remappings\":[]},\"sources\":{\"contracts/vault/compound/CTokenMock.sol\":{\"content\":\"// SPDX-License-Identifier: BUSL-1.1\\npragma solidity 0.8.6;\\n\\ncontract CTokenMock {\\n    uint256 public exchangeRateStored;\\n    uint256 public borrowIndex;\\n    uint256 counter; // Just to avoid warnings\\n\\n    function setExchangeRate(uint256 chi) external {\\n        exchangeRateStored = chi;\\n    }\\n\\n    function setBorrowIndex(uint256 chi) external {\\n        borrowIndex = chi;\\n    }\\n\\n    function exchangeRateCurrent() public returns (uint256) {\\n        counter++;\\n        return exchangeRateStored;\\n    }\\n}\\n\",\"keccak256\":\"0xab8cc65a772333d52a7191853277acee0482dcd94469cbc4e55ca3c3db92483b\",\"license\":\"BUSL-1.1\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50610131806100206000396000f3fe6080604052348015600f57600080fd5b506004361060505760003560e01c8063182df0f514605557806337d9bd9214606f578063aa5af0fd146081578063bd6d894d146089578063db068e0e14608f575b600080fd5b605d60005481565b60405190815260200160405180910390f35b607f607a36600460bb565b600155565b005b605d60015481565b605d609f565b607f609a36600460bb565b600055565b600280546000918260ae8360d3565b9190505550600054905090565b60006020828403121560cc57600080fd5b5035919050565b600060001982141560f457634e487b7160e01b600052601160045260246000fd5b506001019056fea26469706673582212200cf536db85e89ac459bc0475486f07841e39b78e4dec47aa5f2a85de404d2f3764736f6c63430008060033",
+  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060505760003560e01c8063182df0f514605557806337d9bd9214606f578063aa5af0fd146081578063bd6d894d146089578063db068e0e14608f575b600080fd5b605d60005481565b60405190815260200160405180910390f35b607f607a36600460bb565b600155565b005b605d60015481565b605d609f565b607f609a36600460bb565b600055565b600280546000918260ae8360d3565b9190505550600054905090565b60006020828403121560cc57600080fd5b5035919050565b600060001982141560f457634e487b7160e01b600052601160045260246000fd5b506001019056fea26469706673582212200cf536db85e89ac459bc0475486f07841e39b78e4dec47aa5f2a85de404d2f3764736f6c63430008060033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 3,
+        "contract": "contracts/vault/compound/CTokenMock.sol:CTokenMock",
+        "label": "exchangeRateStored",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 5,
+        "contract": "contracts/vault/compound/CTokenMock.sol:CTokenMock",
+        "label": "borrowIndex",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 7,
+        "contract": "contracts/vault/compound/CTokenMock.sol:CTokenMock",
+        "label": "counter",
+        "offset": 0,
+        "slot": "2",
+        "type": "t_uint256"
+      }
+    ],
+    "types": {
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    }
+  }
+}

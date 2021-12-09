@@ -26,19 +26,23 @@ async function initAsset(
     "Join",
     await ladle.joins(assetId)
   )) as Join;
-  await asset.approve(await ladle.joins(assetId), ethers.constants.MaxUint256); // Owner approves all joins to take from him. Only testing
+  await (
+    await asset.approve(await ladle.joins(assetId), ethers.constants.MaxUint256)
+  ).wait(); // Owner approves all joins to take from him. Only testing
 
-  await join.grantRoles(
-    [
-      id(join.interface, "join(address,uint128)"),
-      id(join.interface, "exit(address,uint128)"),
-      id(join.interface, "retrieve(address,address)"),
-      id(join.interface, "setFlashFeeFactor(uint256)"),
-    ],
-    owner
-  ); // Only test environment
+  await (
+    await join.grantRoles(
+      [
+        id(join.interface, "join(address,uint128)"),
+        id(join.interface, "exit(address,uint128)"),
+        id(join.interface, "retrieve(address,address)"),
+        id(join.interface, "setFlashFeeFactor(uint256)"),
+      ],
+      owner
+    )
+  ).wait(); // Only test environment
 
-  await asset.faucet();
+  await (await asset.faucet()).wait();
 
   return join;
 }
@@ -61,19 +65,22 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   )) as CompoundMultiOracle;
 
   const cToken = (await getContract(hre, "CTokenMock")) as CTokenMock;
-  await wand.addAsset(DAI, dai.address);
-  await wand.addAsset(ETH, weth.address);
+  await (await wand.addAsset(DAI, dai.address)).wait();
+  await (await wand.addAsset(ETH, weth.address)).wait();
   await initAsset(hre, deployer, ladle, DAI, dai);
   await initAsset(hre, deployer, ladle, ETH, weth);
 
-  await compoundMultiOracle.setSource(ETH, RATE, cToken.address);
-  await compoundMultiOracle.setSource(ETH, CHI, cToken.address);
+  await (await compoundMultiOracle.setSource(ETH, RATE, cToken.address)).wait();
+  await (await compoundMultiOracle.setSource(ETH, CHI, cToken.address)).wait();
 
-  await wand.makeBase(ETH, compoundMultiOracle.address);
+  await (await wand.makeBase(ETH, compoundMultiOracle.address)).wait();
+
+  const currentBlock = await hre.ethers.provider.getBlock("latest");
 
   const joinAddress = (
     await joinFactory.queryFilter(
-      joinFactory.filters.JoinCreated(dai.address, null)
+      joinFactory.filters.JoinCreated(dai.address, null),
+      currentBlock.number - 50
     )
   )[0].args[1];
 };
