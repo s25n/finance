@@ -2,6 +2,7 @@ import { id } from "@yield-protocol/utils-v2";
 import { ethers } from "ethers";
 import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
+import { Event } from "@ethersproject/contracts";
 import {
   Cauldron,
   ERC20Test,
@@ -12,6 +13,7 @@ import {
 } from "../typechain-types";
 import { DAI, ETH } from "../utils/constants";
 import { getContract } from "../utils/getContract";
+import { Result } from "@ethersproject/abi";
 
 async function initPool(
   owner: string,
@@ -38,6 +40,7 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployer } = await hre.getNamedAccounts();
 
   const weth = (await getContract(hre, "MockWeth")) as ERC20Test;
+  const dai = (await getContract(hre, "MockDai")) as ERC20Test;
 
   const cauldron = (await getContract(hre, "Cauldron")) as Cauldron;
   const ladle = (await getContract(hre, "Ladle")) as Ladle;
@@ -64,6 +67,11 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     ).fyToken
   )) as FYToken;
 
+  //   const join = (await hre.ethers.getContractAt(
+  //     "Join",
+  //     await ladle.joins(ETH)
+  //   )) as Join;
+
   await initPool(deployer, pool, weth, fyToken);
 
   await (
@@ -76,6 +84,46 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       deployer
     )
   ).wait(); // Only test environment
+
+  const accounts = await hre.ethers.getSigners();
+  const account = accounts[1];
+
+  const tx = await ladle.connect(account).build(seriesId, DAI, 1);
+
+  const events = (await tx.wait()).events as Array<Event>;
+  // events[0] is Transfer
+  const result = events[0].args as Result;
+
+  console.log(
+    "event",
+    events[0].topics[0], // ??
+    events[0].topics[1], // vaultId
+    events[0].topics[2], // owne
+    events[0].topics[3],
+    events[0].topics[4]
+  );
+
+  await weth.connect(account).faucet();
+  await weth
+    .connect(account)
+    .approve(await ladle.joins(ETH), ethers.utils.parseEther("100000"));
+  await dai.connect(account).faucet();
+  await dai
+    .connect(account)
+    .approve(await ladle.joins(DAI), ethers.utils.parseEther("100000"));
+
+  const vaultId = events[0].topics[1].slice(0, 26);
+
+  console.log(vaultId);
+
+  await ladle
+    .connect(account)
+    .pour(
+      vaultId,
+      account.address,
+      ethers.utils.parseEther("10"),
+      ethers.utils.parseEther("1")
+    );
 };
 
 deploy.tags = ["test", "init"];
