@@ -1,9 +1,13 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Web3Context } from "../providers/Web3Provider";
 import layerIcon from "../assets/images/layers.png";
 import daiIcon from "../assets/images/dai.png";
 import "./css/modeBox.css";
 import StyledTextBox from "./StyledTextBox";
+import { BigNumber } from "@ethersproject/bignumber";
+import { constants } from "ethers";
+import { ERC20__factory } from "../typechain-types";
+import contracts from "../envs/contracts";
 
 interface Props {}
 
@@ -13,13 +17,27 @@ interface State {
 }
 
 const Lend = (props: Props) => {
-  const { connected, address, reset, connect } = useContext(Web3Context);
+  const { connected, address, provider, connect } = useContext(Web3Context);
+  const [allowance, setAllownace] = useState<BigNumber>(constants.Zero);
+  const [amount, setAmount] = useState<string>("0");
   const confirmButtonHandler = () => {
     if (!connected) {
       connect();
     } else {
     }
   };
+
+  useEffect(() => {
+    if (connected && address && provider) {
+      ERC20__factory
+      .connect(contracts.Dai, provider.getSigner())
+      .allowance(address, contracts.Ladle)
+      .then((allowance) => {
+        setAllownace(allowance)
+      })
+    }
+  }, [connected, address, provider])
+
   const initialState = { portfolio: "0.00", current: "0.00" };
 
   const [state, setState] = useState(initialState);
@@ -105,10 +123,16 @@ const Lend = (props: Props) => {
             className="input-lend-amount"
             placeholder={"Enter the amount of DAI to lend"}
             disabled={!connected}
+            onChange={({ target }) => { setAmount(target.value) }}
+            value={amount}
           ></input>
         </div>
         <button className="button-submit" onClick={confirmButtonHandler}>
-          {connected ? "Confirm" : "Connet Wallet"}
+          {
+            connected ?
+              allowance.gte(BigNumber.from(amount || "0"))
+                ? "Confirm" : "Approve s25n protocol" : "Connet Wallet"
+          }
         </button>
       </div>
     </div>
