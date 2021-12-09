@@ -116,14 +116,12 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   console.log(vaultId);
 
-  await ladle
-    .connect(account)
-    .pour(
-      vaultId,
-      account.address,
-      ethers.utils.parseEther("10"),
-      ethers.utils.parseEther("1")
-    );
+  await ladle.connect(account).pour(
+    vaultId,
+    account.address,
+    ethers.utils.parseEther("10"), // deposit collateral
+    ethers.utils.parseEther("1") // borrow amount (amount to mint fyToken)
+  );
 };
 
 deploy.tags = ["test", "init"];
