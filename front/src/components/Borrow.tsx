@@ -91,7 +91,7 @@ const Borrow = (props: Props) => {
           ></input>
         </div>
         <button className="button-submit" onClick={confirmButtonHandler}>
-          {connected ? !isProxy ? "First, create a Yield proxy" : "Confirm" : "Connet Wallet"}
+          {connected ? !isProxy ? "First, create a s25n proxy" : "Confirm" : "Connet Wallet"}
         </button>
       </div>
     </div>
