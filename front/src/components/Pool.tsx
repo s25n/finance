@@ -3,8 +3,15 @@ import { Web3Context } from "../providers/Web3Provider";
 import layerIcon from "../assets/images/layers.png";
 import daiIcon from "../assets/images/dai.png";
 import "./css/modeBox.css";
+import StyledTextBox from "./StyledTextBox";
 
 interface Props {}
+
+interface State {
+  tokens: number;
+  share: number;
+  liquidity: number;
+}
 
 const Pool = (props: Props) => {
   const { connected, address, reset, connect } = useContext(Web3Context);
@@ -15,7 +22,9 @@ const Pool = (props: Props) => {
     }
   };
 
-  const [liquidity, setLiquidity] = useState(2.2);
+  const initialState = { tokens: 0.0, share: 0, liquidity: 2.2 };
+
+  const [state, setState] = useState(initialState);
 
   return (
     <div className="mode-container">
@@ -60,16 +69,26 @@ const Pool = (props: Props) => {
               </div>
             </button>
           </div>
-          <div className="pool-liquidity-box">
-            <span style={{ fontFamily: "NotoSans-Medium", fontSize: 15 }}>
-              Total Liquidity
-            </span>
-            <span style={{ fontFamily: "NotoSans-SemiLight", fontSize: 12 }}>
-              staked in this series
-            </span>
-            <span style={{ fontFamily: "NotoSans-Medium", fontSize: 15 }}>
-              {`${liquidity}M Tokens`}
-            </span>
+          <div className="value-box-container">
+            {connected && (
+              <>
+                <StyledTextBox
+                  title={"Your Pool Tokens"}
+                  subtitle={"owned this series"}
+                  value={`${state.tokens}`}
+                />
+                <StyledTextBox
+                  title={"Your Pool share"}
+                  subtitle={"of total tokens"}
+                  value={`${state.share}%`}
+                />
+              </>
+            )}
+            <StyledTextBox
+              title={"Total Liquidity"}
+              subtitle={"staked in this series"}
+              value={`${state.liquidity}M Tokens`}
+            />
           </div>
         </div>
       </div>
