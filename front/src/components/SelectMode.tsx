@@ -11,10 +11,6 @@ const SelectMode = (props: Props) => {
   return (
     <div className="select-box">
       <ModeButton
-        name={ModeType.COLLATERAL}
-        isCurrentMode={currentMode === ModeType.COLLATERAL}
-      />
-      <ModeButton
         name={ModeType.BORROW}
         isCurrentMode={currentMode === ModeType.BORROW}
       />

@@ -10,7 +10,6 @@ import Pool from "./components/Pool";
 import Lend from "./components/Lend";
 import Header from "./components/Header";
 import SelectMode from "./components/SelectMode";
-import Collateral from "./components/Collateral";
 
 function App() {
   return (
@@ -20,7 +19,6 @@ function App() {
         <SelectMode />
         <div>
           <Routes>
-            <Route path="/collateral" element={<Collateral />} />
             <Route path="/borrow" element={<Borrow />} />
             <Route path="/lend" element={<Lend />} />
             <Route path="/pool" element={<Pool />} />
