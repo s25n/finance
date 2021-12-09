@@ -4,18 +4,14 @@ import layerIcon from "../assets/images/layers.png";
 import ethIcon from "../assets/images/eth.png";
 
 import "./css/modeBox.css";
-import { ProxyContext } from "../providers/ProxyProvider";
 
 interface Props {}
 
 const Collateral = (props: Props) => {
   const { connected, address, reset, connect } = useContext(Web3Context);
-  const { isProxy, build } = useContext(ProxyContext);
   const confirmButtonHandler = () => {
     if (!connected) {
       connect();
-    } else if(!isProxy) {
-      build();
     } else {
     }
   };
@@ -83,7 +79,7 @@ const Collateral = (props: Props) => {
           ></input>
         </div>
         <button className="button-submit" onClick={confirmButtonHandler}>
-          {connected ? !isProxy ? "First, create a s25n proxy" : "Confirm" : "Connet Wallet"}
+          {connected ? "Confirm" : "Connet Wallet"}
         </button>
       </div>
     </div>

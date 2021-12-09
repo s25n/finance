@@ -4,14 +4,11 @@ import './index.css';
 import App from './App';
 import Web3Provider from './providers/Web3Provider';
 import reportWebVitals from './reportWebVitals';
-import ProxyProvider from './providers/ProxyProvider';
 
 ReactDOM.render(
   <React.StrictMode>
     <Web3Provider>
-      <ProxyProvider>
-        <App />
-      </ProxyProvider>
+      <App />
     </Web3Provider>
   </React.StrictMode>,
   document.getElementById('root')
