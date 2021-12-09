@@ -4,14 +4,18 @@ import layerIcon from "../assets/images/layers.png";
 import daiIcon from "../assets/images/dai.png";
 
 import "./css/modeBox.css";
+import { ProxyContext } from "../providers/ProxyProvider";
 
 interface Props {}
 
 const Borrow = (props: Props) => {
   const { connected, address, reset, connect } = useContext(Web3Context);
+  const { isProxy, build } = useContext(ProxyContext);
   const confirmButtonHandler = () => {
     if (!connected) {
       connect();
+    } else if(!isProxy) {
+      build();
     } else {
     }
   };
@@ -87,7 +91,7 @@ const Borrow = (props: Props) => {
           ></input>
         </div>
         <button className="button-submit" onClick={confirmButtonHandler}>
-          {connected ? "Confirm" : "Connet Wallet"}
+          {connected ? !isProxy ? "First, create a Yield proxy" : "Confirm" : "Connet Wallet"}
         </button>
       </div>
     </div>
