@@ -7,6 +7,8 @@ import {
   Cauldron,
   ChainlinkAggregatorV3Mock,
   ChainlinkMultiOracle,
+  CompoundMultiOracle,
+  CTokenMock,
   ERC20Test,
   FYTokenFactory,
   Join,
@@ -16,7 +18,7 @@ import {
   Wand,
   Witch,
 } from "../typechain-types";
-import { DAI, ETH } from "../utils/constants";
+import { CHI, DAI, ETH, RATE } from "../utils/constants";
 import { getContract } from "../utils/getContract";
 
 const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
@@ -53,6 +55,18 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     dai.address,
     daiOracle.address
   );
+
+  const compoundMultiOracle = (await getContract(
+    hre,
+    "CompoundMultiOracle"
+  )) as CompoundMultiOracle;
+
+  const cToken = (await getContract(hre, "CTokenMock")) as CTokenMock;
+
+  await compoundMultiOracle.setSource(ETH, RATE, cToken.address);
+  await compoundMultiOracle.setSource(ETH, CHI, cToken.address);
+
+  await wand.makeBase(ETH, compoundMultiOracle.address);
 
   const ratio = 1000000; //  1000000 == 100% collateralization ratio
 

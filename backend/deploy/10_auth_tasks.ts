@@ -4,6 +4,7 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 import {
   Cauldron,
   ChainlinkMultiOracle,
+  CompoundMultiOracle,
   ERC20Test,
   FYTokenFactory,
   JoinFactory,
@@ -103,6 +104,13 @@ async function joinFactoryAuth(joinFactory: JoinFactory, receiver: string) {
   );
 }
 
+async function poolFactoryAuth(poolFactory: PoolFactory, receiver: string) {
+  await poolFactory.grantRoles(
+    [id(poolFactory.interface, "createPool(address,address)")],
+    receiver
+  );
+}
+
 async function fyTokenFactoryAuth(
   fyTokenFactory: FYTokenFactory,
   receiver: string
@@ -138,6 +146,10 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     hre,
     "ChainlinkMultiOracle"
   )) as ChainlinkMultiOracle;
+  const compoundMultiOracle = (await getContract(
+    hre,
+    "CompoundMultiOracle"
+  )) as CompoundMultiOracle;
 
   await cauldronLadleAuth(cauldron, ladle.address);
   await cauldronWitchAuth(cauldron, witch.address);
@@ -147,6 +159,7 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   await witchGovAuth(witch, wand.address);
   await joinFactoryAuth(joinFactory, wand.address);
   await fyTokenFactoryAuth(fyTokenFactory, wand.address);
+  await poolFactoryAuth(poolFactory, wand.address);
   await chainlinkMultiOracle.grantRole(
     id(
       chainlinkMultiOracle.interface,
@@ -159,6 +172,14 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       chainlinkMultiOracle.interface,
       "setSource(bytes6,address,bytes6,address,address)"
     ),
+    deployer
+  );
+  await compoundMultiOracle.grantRole(
+    id(compoundMultiOracle.interface, "setSource(bytes6,bytes6,address)"),
+    wand.address
+  );
+  await compoundMultiOracle.grantRole(
+    id(compoundMultiOracle.interface, "setSource(bytes6,bytes6,address)"),
     deployer
   );
 

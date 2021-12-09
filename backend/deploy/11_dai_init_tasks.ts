@@ -1,12 +1,13 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { id, constants } from "@yield-protocol/utils-v2";
-import { WAD } from "@yield-protocol/utils-v2/dist/constants";
 import { ethers } from "ethers";
 import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import {
   Cauldron,
   ChainlinkMultiOracle,
+  CompoundMultiOracle,
+  CTokenMock,
   ERC20Test,
   FYTokenFactory,
   Join,
@@ -16,7 +17,7 @@ import {
   Wand,
   Witch,
 } from "../typechain-types";
-import { DAI } from "../utils/constants";
+import { CHI, DAI, ETH, RATE } from "../utils/constants";
 import { getContract } from "../utils/getContract";
 
 // Initialize an asset for testing purposes. Gives the owner powers over it, and approves the join to take the asset from the owner.
@@ -71,7 +72,21 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     "ChainlinkMultiOracle"
   )) as ChainlinkMultiOracle;
 
+  const compoundMultiOracle = (await getContract(
+    hre,
+    "CompoundMultiOracle"
+  )) as CompoundMultiOracle;
+
+  const cToken = (await getContract(hre, "CTokenMock")) as CTokenMock;
   await wand.addAsset(DAI, dai.address);
+  await wand.addAsset(ETH, weth.address);
+  await initAsset(hre, deployer, ladle, DAI, dai);
+  await initAsset(hre, deployer, ladle, ETH, weth);
+
+  await compoundMultiOracle.setSource(ETH, RATE, cToken.address);
+  await compoundMultiOracle.setSource(ETH, CHI, cToken.address);
+
+  await wand.makeBase(ETH, compoundMultiOracle.address);
 
   const joinAddress = (
     await joinFactory.queryFilter(
@@ -79,10 +94,6 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     )
   )[0].args[1];
   const join = (await hre.ethers.getContractAt("Join", joinAddress)) as Join;
-
-  await initAsset(hre, deployer, ladle, DAI, dai);
-
-  await wand.makeBase(ETH);
 };
 
 deploy.tags = ["test", "init"];
