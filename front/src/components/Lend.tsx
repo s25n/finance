@@ -6,8 +6,9 @@ import "./css/modeBox.css";
 import StyledTextBox from "./StyledTextBox";
 import { BigNumber } from "@ethersproject/bignumber";
 import { constants, utils } from "ethers";
-import { ERC20__factory } from "../typechain-types";
+import { ERC20__factory, Ladle__factory, Pool__factory } from "../typechain-types";
 import contracts from "../envs/contracts";
+import { MAX128 } from "../envs/constants";
 
 interface Props {}
 
@@ -27,7 +28,7 @@ const Lend = (props: Props) => {
       if (!provider) return;
 
       ERC20__factory
-        .connect(contracts.Dai, provider.getSigner())
+        .connect(contracts.Dai, provider.getSigner(address))
         .increaseAllowance(contracts.Ladle, constants.MaxUint256)
         .then((tx) => {
           tx.wait().then(() => {
@@ -35,6 +36,37 @@ const Lend = (props: Props) => {
           })
         })
     } else {
+      if (!provider) return;
+
+      /*
+      public mintWithBaseAction(pool: string, receiver: string, fyTokenToBuy: BigNumberish, minTokensMinted: BigNumberish): string {
+        return this.ladle.interface.encodeFunctionData('route',
+          [
+            pool,
+            this.pool.encodeFunctionData('mintWithBase', [receiver, fyTokenToBuy, minTokensMinted])
+          ]
+        )
+      }
+        ithBase(owner, owner, fyTokenToBuy, 0, MAX, OVERRIDES)
+
+      */
+
+      const IPool = new utils.Interface(Pool__factory.abi);
+
+      Ladle__factory
+        .connect(contracts.Ladle, provider.getSigner(address))
+        .route(
+          contracts.Pool,
+          IPool.encodeFunctionData(
+            'mint',
+            [
+              address,
+              address,
+              constants.Zero,
+              MAX128
+            ]
+          )
+        )
     }
   };
 

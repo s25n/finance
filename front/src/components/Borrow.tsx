@@ -1,18 +1,46 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Web3Context } from "../providers/Web3Provider";
 import layerIcon from "../assets/images/layers.png";
 import daiIcon from "../assets/images/dai.png";
+import ethIcon from "../assets/images/eth.png";
 
 import "./css/modeBox.css";
+import { Ladle__factory } from "../typechain-types";
+import contracts from "../envs/contracts";
+import { utils } from "ethers";
+import series from "../envs/series";
+import { DAI, ETH, MAX128 } from "../envs/constants";
 
 interface Props {}
 
 const Borrow = (props: Props) => {
-  const { connected, address, reset, connect } = useContext(Web3Context);
+  const { connected, address, provider, connect } = useContext(Web3Context);
+  const [ethAmount, setEthAmount] = useState<string>("0");
+  const [daiAmount, setDaiAmount] = useState<string>("0");
+
   const confirmButtonHandler = () => {
     if (!connected) {
       connect();
     } else {
+      if (!provider) return;
+
+      const ILadle = new utils.Interface(Ladle__factory.abi)
+      Ladle__factory
+        .connect(contracts.Ladle, provider.getSigner(address))
+        .batch([
+          ILadle.encodeFunctionData('build', [series[0], DAI, 0]),
+          ILadle.encodeFunctionData('joinEther', [ETH]),
+          ILadle.encodeFunctionData(
+            'serve',
+            [
+              '0x' + '00'.repeat(12),
+              address,
+              utils.parseEther(ethAmount),
+              utils.parseEther(daiAmount),
+              MAX128
+            ]
+          )
+        ], { value: utils.parseEther(ethAmount) })
     }
   };
 
@@ -73,6 +101,35 @@ const Borrow = (props: Props) => {
             textAlign: "left",
           }}
         >
+          Amount to deposit
+        </span>
+        <div className="borrow-input-box">
+          <div style={{ padding: 5 }}>
+            <img src={ethIcon} alt={"eth"} width={20} height={20} />
+          </div>
+          <input
+            className="input-borrow-amount"
+            placeholder={"Enter the ETH amount to deposit"}
+            disabled={!connected}
+            onChange={({target}) => {
+              setEthAmount(target.value)
+            }}
+            value={ethAmount}
+          ></input>
+        </div>
+      </div>
+      <div className="mode-detail-box">
+        <span
+          style={{
+            fontFamily: "LexendDeca",
+            top: 0,
+            height: 30,
+            fontSize: 20,
+            color: "#343434",
+            flex: 3,
+            textAlign: "left",
+          }}
+        >
           Borrow details
         </span>
         <div className="borrow-input-box">
@@ -84,6 +141,10 @@ const Borrow = (props: Props) => {
             className="input-borrow-amount"
             placeholder={"Enter the amount of DAI to borrow"}
             disabled={!connected}
+            onChange={({target}) => {
+              setDaiAmount(target.value)
+            }}
+            value={daiAmount}
           ></input>
         </div>
         <button className="button-submit" onClick={confirmButtonHandler}>

@@ -1,5 +1,5 @@
 const series = [
-	"e46ea39885ba"
+	"0xe46ea39885ba"
 ]
 
 export default series
