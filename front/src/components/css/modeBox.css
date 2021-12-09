@@ -14,6 +14,22 @@
   width: 100%;
 }
 
+.mode-color-box-collateral {
+  display: flex;
+  box-sizing: border-box;
+  align-self: center;
+  margin-bottom: -18px;
+  background: linear-gradient(to right bottom, rgb(240, 129, 127), rgb(255, 134, 200), rgb(130, 212, 187), rgb(106, 182, 241), rgb(203, 144, 201), rgb(174, 209, 117), rgb(173, 216, 230), rgb(173, 216, 230), rgb(173, 216, 230), rgb(173, 216, 230), rgb(173, 216, 230), rgb(173, 216, 230), rgb(255, 220, 92), rgb(255, 191, 129), rgb(149, 164, 219));
+  min-width: 0px;
+  min-height: 0px;
+  flex-direction: column;
+  max-width: 620px;
+  width: 100%;
+  height: 100%;
+  padding-bottom: 40px;
+  border-radius: 10px;
+}
+
 .mode-color-box {
   display: flex;
   box-sizing: border-box;

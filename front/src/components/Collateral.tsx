@@ -1,14 +1,14 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Web3Context } from "../providers/Web3Provider";
 import layerIcon from "../assets/images/layers.png";
-import daiIcon from "../assets/images/dai.png";
+import ethIcon from "../assets/images/eth.png";
 
 import "./css/modeBox.css";
 import { ProxyContext } from "../providers/ProxyProvider";
 
 interface Props {}
 
-const Borrow = (props: Props) => {
+const Collateral = (props: Props) => {
   const { connected, address, reset, connect } = useContext(Web3Context);
   const { isProxy, build } = useContext(ProxyContext);
   const confirmButtonHandler = () => {
@@ -20,15 +20,14 @@ const Borrow = (props: Props) => {
     }
   };
 
+  const [liquidity, setLiquidity] = useState(2.2);
+
   return (
     <div className="mode-container">
-      <div className="mode-color-box">
+      <div className="mode-color-box-collateral">
         <div className="mode-color-box-contents">
           <div className="mode-color-box-series">
             <div className="mode-series">
-              <div className="series-apy">
-                <span style={{ fontSize: 30 }}>7.00%</span>
-              </div>
               <span
                 style={{
                   fontFamily: "LexendDeca",
@@ -37,31 +36,25 @@ const Borrow = (props: Props) => {
                   fontSize: 20,
                   color: "#343434",
                   flex: 3,
+                  marginLeft: 20,
+                  marginRight: 100,
                 }}
               >
-                December 2021
+                Manage ETH Collateral
               </span>
             </div>
             <div style={{ width: 100, minWidth: 30 }} />
-            <button className="button-series">
-              <div className="button-series-content">
-                <img src={layerIcon} alt="" width="15" height="15" />
-                <span
-                  style={{
-                    alignSelf: "center",
-                    textAlign: "center",
-                    verticalAlign: "center",
-                    top: 0,
-                    height: 30,
-                    fontSize: 13,
-                    lineHeight: 2,
-                    color: "#343434",
-                  }}
-                >
-                  Change Series
-                </span>
-              </div>
-            </button>
+          </div>
+          <div className="pool-liquidity-box">
+            <span style={{ fontFamily: "NotoSans-Medium", fontSize: 15 }}>
+              Max Borrowing Power
+            </span>
+            <span style={{ fontFamily: "NotoSans-SemiLight", fontSize: 12 }}>
+              based on your ETH Balance
+            </span>
+            <span style={{ fontFamily: "NotoSans-Medium", fontSize: 15 }}>
+              {`${liquidity} DAI`}
+            </span>
           </div>
         </div>
       </div>
@@ -77,16 +70,15 @@ const Borrow = (props: Props) => {
             textAlign: "left",
           }}
         >
-          Borrow details
+          Amount to deposit
         </span>
         <div className="borrow-input-box">
-          <button className="button-select-asset">
-            <img src={daiIcon} alt={"dai"} width={20} height={20} />
-            DAI
-          </button>
+          <div style={{ padding: 5 }}>
+            <img src={ethIcon} alt={"dai"} width={20} height={20} />
+          </div>
           <input
             className="input-borrow-amount"
-            placeholder={"Enter the amount of DAI to borrow"}
+            placeholder={"Enter the ETH amount to deposit"}
             disabled={!connected}
           ></input>
         </div>
@@ -98,4 +90,4 @@ const Borrow = (props: Props) => {
   );
 };
 
-export default Borrow;
+export default Collateral;
