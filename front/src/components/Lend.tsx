@@ -5,7 +5,7 @@ import daiIcon from "../assets/images/dai.png";
 import "./css/modeBox.css";
 import StyledTextBox from "./StyledTextBox";
 import { BigNumber } from "@ethersproject/bignumber";
-import { constants } from "ethers";
+import { constants, utils } from "ethers";
 import { ERC20__factory } from "../typechain-types";
 import contracts from "../envs/contracts";
 
@@ -23,6 +23,17 @@ const Lend = (props: Props) => {
   const confirmButtonHandler = () => {
     if (!connected) {
       connect();
+    } else if (utils.parseEther(amount || '0').gt(allowance)) {
+      if (!provider) return;
+
+      ERC20__factory
+        .connect(contracts.Dai, provider.getSigner())
+        .increaseAllowance(contracts.Ladle, constants.MaxUint256)
+        .then((tx) => {
+          tx.wait().then(() => {
+            setAllownace(constants.MaxUint256)
+          })
+        })
     } else {
     }
   };
@@ -130,7 +141,7 @@ const Lend = (props: Props) => {
         <button className="button-submit" onClick={confirmButtonHandler}>
           {
             connected ?
-              allowance.gte(BigNumber.from(amount || "0"))
+              allowance.gte(utils.parseEther(amount || "0"))
                 ? "Confirm" : "Approve s25n protocol" : "Connet Wallet"
           }
         </button>
