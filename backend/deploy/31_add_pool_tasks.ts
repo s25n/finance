@@ -1,5 +1,5 @@
 import { id } from "@yield-protocol/utils-v2";
-import { ethers } from "ethers";
+import { constants, ethers } from "ethers";
 import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { Event } from "@ethersproject/contracts";
@@ -119,9 +119,45 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   await ladle.connect(account).pour(
     vaultId,
     account.address,
-    ethers.utils.parseEther("10"), // deposit collateral
-    ethers.utils.parseEther("1") // borrow amount (amount to mint fyToken)
+    ethers.utils.parseEther("1000"), // deposit collateral
+    ethers.utils.parseEther("100") // borrow amount (amount to mint fyToken)
   );
+
+  await dai
+    .connect(account)
+    .approve(pool.address, ethers.utils.parseEther("100000"));
+
+  await weth
+    .connect(account)
+    .transfer(pool.address, ethers.utils.parseEther("100000"));
+
+  await dai
+    .connect(account)
+    .transfer(pool.address, ethers.utils.parseEther("100000"));
+
+  await pool.sync();
+
+  await pool
+    .connect(account)
+    .mint(account.address, account.address, 0, ethers.constants.MaxUint256);
+
+  const minAmount = 1;
+
+  await fyToken
+    .connect(account)
+    .transfer(pool.address, ethers.utils.parseEther("100"));
+
+  await ladle
+    .connect(account)
+    .route(
+      pool.address,
+      pool.interface.encodeFunctionData("sellFYToken", [
+        account.address,
+        minAmount,
+      ])
+    );
+
+  console.log(await (await dai.balanceOf(account.address)).toString());
 };
 
 deploy.tags = ["test", "init"];
