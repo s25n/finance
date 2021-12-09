@@ -128,9 +128,6 @@ async function fyTokenFactoryAuth(
 
 const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployer } = await hre.getNamedAccounts();
-  const { deploy } = hre.deployments;
-
-  const dai = (await getContract(hre, "MockDai")) as ERC20Test;
 
   const cauldron = (await getContract(hre, "Cauldron")) as Cauldron;
   const witch = (await getContract(hre, "Witch")) as Witch;

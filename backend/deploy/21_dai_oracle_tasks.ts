@@ -1,6 +1,3 @@
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { id, constants } from "@yield-protocol/utils-v2";
-import { ethers } from "ethers";
 import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import {
@@ -11,7 +8,6 @@ import {
   CTokenMock,
   ERC20Test,
   FYTokenFactory,
-  Join,
   JoinFactory,
   Ladle,
   PoolFactory,
@@ -28,16 +24,8 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const dai = (await getContract(hre, "MockDai")) as ERC20Test;
 
-  const cauldron = (await getContract(hre, "Cauldron")) as Cauldron;
   const witch = (await getContract(hre, "Witch")) as Witch;
-  const ladle = (await getContract(hre, "Ladle")) as Ladle;
   const wand = (await getContract(hre, "Wand")) as Wand;
-  const joinFactory = (await getContract(hre, "JoinFactory")) as JoinFactory;
-  const poolFactory = (await getContract(hre, "PoolFactory")) as PoolFactory;
-  const fyTokenFactory = (await getContract(
-    hre,
-    "FYTokenFactory"
-  )) as FYTokenFactory;
   const chainlinkMultiOracle = (await getContract(
     hre,
     "ChainlinkMultiOracle"
