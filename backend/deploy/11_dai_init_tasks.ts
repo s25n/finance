@@ -69,20 +69,6 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   await (await wand.addAsset(ETH, weth.address)).wait();
   await initAsset(hre, deployer, ladle, DAI, dai);
   await initAsset(hre, deployer, ladle, ETH, weth);
-
-  await (await compoundMultiOracle.setSource(ETH, RATE, cToken.address)).wait();
-  await (await compoundMultiOracle.setSource(ETH, CHI, cToken.address)).wait();
-
-  await (await wand.makeBase(ETH, compoundMultiOracle.address)).wait();
-
-  const currentBlock = await hre.ethers.provider.getBlock("latest");
-
-  const joinAddress = (
-    await joinFactory.queryFilter(
-      joinFactory.filters.JoinCreated(dai.address, null),
-      currentBlock.number - 50
-    )
-  )[0].args[1];
 };
 
 deploy.tags = ["test", "init"];

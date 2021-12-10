@@ -11,7 +11,7 @@ import {
   Pool,
   Wand,
 } from "../typechain-types";
-import { DAI, ETH } from "../utils/constants";
+import { DAI, ETH, SERIESID } from "../utils/constants";
 import { getContract } from "../utils/getContract";
 import { Result } from "@ethersproject/abi";
 
@@ -29,8 +29,14 @@ async function initPool(
     )
   ).wait(); // Only test environment
   await (
-    await fyToken.mint(pool.address, ethers.utils.parseEther("1").mul(1100000))
+    await fyToken.mint(pool.address, ethers.utils.parseEther("12300000"))
   ).wait();
+  await (
+    await base.transfer(pool.address, ethers.utils.parseEther("12300000"))
+  ).wait();
+
+  await pool.mint(owner, owner, 0, ethers.constants.MaxUint256);
+
   await (await pool.sync()).wait();
 
   return pool;
@@ -49,10 +55,10 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const currentBlock = await hre.ethers.provider.getBlock("latest");
   const maturity = currentBlock.timestamp + 86400 * 90; // 3 months
 
-  const seriesId = ethers.utils.hexlify(ethers.utils.randomBytes(6));
+  const seriesId = SERIESID;
 
   await (
-    await wand.addSeries(seriesId, ETH, maturity, [DAI], seriesId, seriesId)
+    await wand.addSeries(seriesId, DAI, maturity, [ETH], seriesId, seriesId)
   ).wait();
 
   const pool = (await hre.ethers.getContractAt(
@@ -72,7 +78,7 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   //     await ladle.joins(ETH)
   //   )) as Join;
 
-  await initPool(deployer, pool, weth, fyToken);
+  await initPool(deployer, pool, dai, fyToken);
 
   await (
     await fyToken.grantRoles(
@@ -84,80 +90,6 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       deployer
     )
   ).wait(); // Only test environment
-
-  const accounts = await hre.ethers.getSigners();
-  const account = accounts[1];
-
-  const tx = await ladle.connect(account).build(seriesId, DAI, 1);
-
-  const events = (await tx.wait()).events as Array<Event>;
-  // events[0] is Transfer
-  const result = events[0].args as Result;
-
-  console.log(
-    "event",
-    events[0].topics[0], // ??
-    events[0].topics[1], // vaultId
-    events[0].topics[2], // owne
-    events[0].topics[3],
-    events[0].topics[4]
-  );
-
-  await weth.connect(account).faucet();
-  await weth
-    .connect(account)
-    .approve(await ladle.joins(ETH), ethers.utils.parseEther("100000"));
-  await dai.connect(account).faucet();
-  await dai
-    .connect(account)
-    .approve(await ladle.joins(DAI), ethers.utils.parseEther("100000"));
-
-  const vaultId = events[0].topics[1].slice(0, 26);
-
-  console.log(vaultId);
-
-  await ladle.connect(account).pour(
-    vaultId,
-    account.address,
-    ethers.utils.parseEther("1000"), // deposit collateral
-    ethers.utils.parseEther("100") // borrow amount (amount to mint fyToken)
-  );
-
-  await dai
-    .connect(account)
-    .approve(pool.address, ethers.utils.parseEther("100000"));
-
-  await weth
-    .connect(account)
-    .transfer(pool.address, ethers.utils.parseEther("100000"));
-
-  await dai
-    .connect(account)
-    .transfer(pool.address, ethers.utils.parseEther("100000"));
-
-  await pool.sync();
-
-  await pool
-    .connect(account)
-    .mint(account.address, account.address, 0, ethers.constants.MaxUint256);
-
-  const minAmount = 1;
-
-  await fyToken
-    .connect(account)
-    .transfer(pool.address, ethers.utils.parseEther("100"));
-
-  await ladle
-    .connect(account)
-    .route(
-      pool.address,
-      pool.interface.encodeFunctionData("sellFYToken", [
-        account.address,
-        minAmount,
-      ])
-    );
-
-  console.log(await (await dai.balanceOf(account.address)).toString());
 };
 
 deploy.tags = ["test", "init"];
