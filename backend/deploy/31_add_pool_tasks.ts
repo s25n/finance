@@ -35,7 +35,7 @@ async function initPool(
     await base.transfer(pool.address, ethers.utils.parseEther("12300000"))
   ).wait();
 
-  await pool.mint(owner, owner, 0, ethers.constants.MaxUint256);
+  await (await pool.mint(owner, owner, 0, ethers.constants.MaxUint256)).wait();
 
   await (await pool.sync()).wait();
 
@@ -57,9 +57,13 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const seriesId = SERIESID;
 
+  console.log(123);
+
   await (
     await wand.addSeries(seriesId, DAI, maturity, [ETH], seriesId, seriesId)
   ).wait();
+
+  console.log("add series done");
 
   const pool = (await hre.ethers.getContractAt(
     "Pool",
@@ -79,6 +83,8 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   //   )) as Join;
 
   await initPool(deployer, pool, dai, fyToken);
+
+  console.log("init pool done");
 
   await (
     await fyToken.grantRoles(

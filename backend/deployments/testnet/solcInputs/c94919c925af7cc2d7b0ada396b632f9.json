@@ -2,7 +2,7 @@
   "language": "Solidity",
   "sources": {
     "contracts/vault/compound/CTokenMock.sol": {
-      "content": "// SPDX-License-Identifier: BUSL-1.1\npragma solidity 0.8.6;\n\ncontract CTokenMock {\n    uint256 public exchangeRateStored;\n    uint256 public borrowIndex;\n    uint256 counter; // Just to avoid warnings\n\n    function setExchangeRate(uint256 chi) external {\n        exchangeRateStored = chi;\n    }\n\n    function setBorrowIndex(uint256 chi) external {\n        borrowIndex = chi;\n    }\n\n    function exchangeRateCurrent() public returns (uint256) {\n        counter++;\n        return exchangeRateStored;\n    }\n}\n"
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity 0.8.6;\n\ncontract CTokenMock {\n    uint256 public exchangeRateStored;\n    uint256 public borrowIndex;\n    uint256 counter; // Just to avoid warnings\n\n    function setExchangeRate(uint256 chi) external {\n        exchangeRateStored = chi;\n    }\n\n    function setBorrowIndex(uint256 chi) external {\n        borrowIndex = chi;\n    }\n\n    function exchangeRateCurrent() public returns (uint256) {\n        counter++;\n        return exchangeRateStored;\n    }\n}\n"
     }
   },
   "settings": {

@@ -54,6 +54,8 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const seriesId = SERIESID;
 
+  console.log("series id", seriesId);
+
   const pool = (await hre.ethers.getContractAt(
     "Pool",
     await ladle.pools(seriesId)
@@ -66,6 +68,8 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     ).fyToken
   )) as FYToken;
 
+  console.log("fyToken address", fyToken.address);
+
   //   const join = (await hre.ethers.getContractAt(
   //     "Join",
   //     await ladle.joins(ETH)
@@ -75,6 +79,8 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const account = accounts[0];
 
   const tx = await ladle.connect(account).build(seriesId, ETH, 1);
+
+  console.log("build done");
 
   const events = (await tx.wait()).events as Array<Event>;
   // events[0] is Transfer
@@ -88,31 +94,45 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   // );
   const vaultId = events[0].topics[1].slice(0, 26);
 
-  await weth.connect(account).faucet();
-  await weth
-    .connect(account)
-    .approve(await ladle.joins(ETH), ethers.utils.parseEther("100000"));
-  await dai.connect(account).faucet();
-  await dai
-    .connect(account)
-    .approve(await ladle.joins(DAI), ethers.utils.parseEther("100000"));
+  await (await weth.connect(account).faucet()).wait();
+  await (
+    await weth
+      .connect(account)
+      .approve(await ladle.joins(ETH), ethers.utils.parseEther("100000"))
+  ).wait();
+  await (await dai.connect(account).faucet()).wait();
+  await (
+    await dai
+      .connect(account)
+      .approve(await ladle.joins(DAI), ethers.utils.parseEther("100000"))
+  ).wait();
 
-  await ladle.connect(account).pour(
-    vaultId,
-    account.address,
-    ethers.utils.parseEther("1000"), // deposit collateral
-    ethers.utils.parseEther("100") // borrow amount (amount to mint fyToken)
-  );
+  console.log("faucet done");
 
-  await dai
-    .connect(account)
-    .approve(pool.address, ethers.utils.parseEther("100000"));
+  await (
+    await ladle.connect(account).pour(
+      vaultId,
+      account.address,
+      ethers.utils.parseEther("1000"), // deposit collateral
+      ethers.utils.parseEther("100") // borrow amount (amount to mint fyToken)
+    )
+  ).wait();
 
-  await pool.sync();
+  console.log("pour done");
 
-  await pool
-    .connect(account)
-    .mint(account.address, account.address, 0, ethers.constants.MaxUint256);
+  await (
+    await dai
+      .connect(account)
+      .approve(pool.address, ethers.utils.parseEther("100000"))
+  ).wait();
+
+  await (await pool.sync()).wait();
+
+  await (
+    await pool
+      .connect(account)
+      .mint(account.address, account.address, 0, ethers.constants.MaxUint256)
+  ).wait();
 
   const minAmount = ethers.utils.parseEther("10");
 
@@ -121,20 +141,26 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     (await dai.balanceOf(account.address)).toString()
   );
 
-  await fyToken
-    .connect(account)
-    .mint(account.address, ethers.utils.parseEther("500"));
+  await (
+    await fyToken
+      .connect(account)
+      .mint(account.address, ethers.utils.parseEther("500"))
+  ).wait();
 
-  await fyToken
-    .connect(account)
-    .transfer(pool.address, ethers.utils.parseEther("500"));
+  await (
+    await fyToken
+      .connect(account)
+      .transfer(pool.address, ethers.utils.parseEther("500"))
+  ).wait();
 
-  await ladle
-    .connect(account)
-    .route(
-      pool.address,
-      pool.interface.encodeFunctionData("sellFYToken", [account.address, 0])
-    );
+  await (
+    await ladle
+      .connect(account)
+      .route(
+        pool.address,
+        pool.interface.encodeFunctionData("sellFYToken", [account.address, 0])
+      )
+  ).wait();
 
   console.log(
     "dai balance after",
