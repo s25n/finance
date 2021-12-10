@@ -5,11 +5,11 @@ import daiIcon from "../assets/images/dai.png";
 import ethIcon from "../assets/images/eth.png";
 
 import "./css/modeBox.css";
-import { Ladle__factory, Pool__factory } from "../typechain-types";
+import { FYToken__factory, Ladle__factory, Pool__factory } from "../typechain-types";
 import contracts from "../envs/contracts";
 import { constants, utils } from "ethers";
 import series from "../envs/series";
-import { DAI } from "../envs/constants";
+import { ETH } from "../envs/constants";
 
 interface Props {}
 
@@ -30,7 +30,7 @@ const Borrow = (props: Props) => {
       Ladle__factory
         .connect(contracts.Ladle, provider.getSigner(address))
         .batch([
-          ILadle.encodeFunctionData('build', [series[0], DAI, 0]),
+          ILadle.encodeFunctionData('build', [series[0], ETH, 0]),
           ILadle.encodeFunctionData(
             'pour',
             [
@@ -40,6 +40,11 @@ const Borrow = (props: Props) => {
               utils.parseEther(daiAmount)
             ]
           ),
+          ILadle.encodeFunctionData('transfer', [
+            contracts.FyToken,
+            contracts.Pool,
+            utils.parseEther(daiAmount)
+          ]),
           ILadle.encodeFunctionData('route', [
             contracts.Pool,
             IPool.encodeFunctionData('sellFYToken', [
